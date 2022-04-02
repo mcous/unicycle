@@ -144,7 +144,7 @@ class Store(Generic[StateT, ActionT]):
 
 
 def reducer(
-    action_type: Any,
+    *action_type: Any,
 ) -> Callable[[ReducerMethodT[ActionT]], ReducerMethodT[ActionT]]:
     """Mark a Store method as a reducer for a given action type."""
 

@@ -1,11 +1,11 @@
 # Unicycle
 
-A friendly, unidirectional state store for Python. Inspired by [Redux][].
+A predictable, unidirectional state store for Python. Inspired by [Redux][].
 
 Unicycle allows you to:
 
 - Keep the state of a component or application in one or more immutable objects
-- Trigger state changes with action objects
+- Trigger state changes with action messages
 - Subscribe to state transitions
 
 [redux]: https://redux.js.org/
@@ -161,9 +161,7 @@ app.run()
 
 For more complicated states, you can combine several stores into one. This is a powerful feature that allows you to separate your state into different domains while still receiving all the same actions.
 
-A combined store is just another `Store`, so you nest combined stores in other combined stores to create whatever state tree you may need.
-
-For our Pokédex, we could split our single store into two: a `SeenStore` for tracking seen Pokémon and a `CaughtStore` for tracking caught Pokémon.
+A combined store is just another `Store`, so you can nest combined stores in other combined stores to create whatever state tree you need. For our Pokédex, we could split our single store into two: a `SeenStore` for tracking seen Pokémon and a `CaughtStore` for tracking caught Pokémon.
 
 Using our same actions...
 
@@ -198,7 +196,7 @@ class SeenState(NamedTuple):
 class SeenStore(Store[SeenState, PokedexAction]):
     state: SeenState = SeenState()
 
-    @reducer((PokemonSeen, PokemonCaught))
+    @reducer(PokemonSeen, PokemonCaught)
     def pokemon_seen(self, action: Union[PokemonSeen, PokemonCaught]) -> SeenState:
         names = self.state.names
         return SeenState(names=names.union([action.name]))

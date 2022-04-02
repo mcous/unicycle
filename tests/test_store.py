@@ -1,13 +1,17 @@
 """Tests a basic unicycle store."""
 from __future__ import annotations
+from typing import NamedTuple, Union
+from typing_extensions import Final
 
 import pytest
 from anyio import TASK_STATUS_IGNORED, create_task_group, move_on_after
 from anyio.abc import TaskStatus
-from typing import NamedTuple, Union
+
 from unicycle import Store, SubscriptionStrategy, combined_store, reducer
 
 pytestmark = pytest.mark.anyio
+
+_SUBSCRIBE_MOVE_ON_AFTER: Final = 0.05
 
 
 class Decrement(NamedTuple):
@@ -135,7 +139,7 @@ async def test_subscribe_every() -> None:
             async for event in events:
                 results.append(event)
 
-    with move_on_after(0.01):
+    with move_on_after(_SUBSCRIBE_MOVE_ON_AFTER):
         async with create_task_group() as tg:
             await tg.start(_subscribe)
             subject.dispatch(Increment())
@@ -170,7 +174,7 @@ async def test_multiple_subscribers_every() -> None:
             async for event in events:
                 results_2.append(event)
 
-    with move_on_after(0.01):
+    with move_on_after(_SUBSCRIBE_MOVE_ON_AFTER):
         async with create_task_group() as tg:
             await tg.start(_subscribe_1)
             subject.dispatch(Decrement())
@@ -202,7 +206,7 @@ async def test_subscribe_latest() -> None:
             async for event in events:
                 results.append(event)
 
-    with move_on_after(0.01):
+    with move_on_after(_SUBSCRIBE_MOVE_ON_AFTER):
         async with create_task_group() as tg:
             await tg.start(_subscribe)
             subject.dispatch(Increment())
@@ -228,7 +232,7 @@ async def test_subscribe_ends() -> None:
         async for event in events:
             results.append(event)
 
-    with move_on_after(0.01):
+    with move_on_after(_SUBSCRIBE_MOVE_ON_AFTER):
         async with create_task_group() as tg:
             await tg.start(_subscribe)
             subject.dispatch(Increment())
@@ -257,7 +261,7 @@ async def test_multiple_subscribers_latest() -> None:
             async for event in events:
                 results_2.append(event)
 
-    with move_on_after(0.01):
+    with move_on_after(_SUBSCRIBE_MOVE_ON_AFTER):
         async with create_task_group() as tg:
             await tg.start(_subscribe_1)
             subject.dispatch(Decrement())
@@ -319,7 +323,7 @@ async def test_combined_store_subscribe() -> None:
             async for event in events:
                 results.append(event)
 
-    with move_on_after(0.01):
+    with move_on_after(_SUBSCRIBE_MOVE_ON_AFTER):
         async with create_task_group() as tg:
             await tg.start(_subscribe)
             subject.dispatch(Increment())
@@ -351,7 +355,7 @@ def test_multiaction_reducer() -> None:
     class ActionCounter(Store[int, Actions]):
         state = 0
 
-        @reducer((Increment, Decrement))
+        @reducer(Increment, Decrement)
         def increment(self, action: Union[Increment, Decrement]) -> int:
             return self.state + 1
 
