@@ -1,0 +1,17 @@
+[flake8]
+docstring-convention = google
+
+extend-ignore =
+    # ignore E501 and E203 for black
+    E501
+    E203
+    # do not require type annotations for self nor cls
+    ANN101
+    ANN102
+    # do not require docstrings for __init__ nor magic methods
+    D105
+    D107
+
+per-file-ignores =
+    # do not require docstrings for test functions
+    tests/*:D103

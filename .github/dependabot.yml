@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # GitHub Actions dependencies
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+
+  # Poetry dependencies
+  - package-ecosystem: 'pip'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
