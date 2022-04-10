@@ -33,7 +33,7 @@ jobs:
         run: poetry run pytest --cov=unicycle --cov-report=xml
 
       - name: 'Upload coverage report'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
 
   check:
     name: 'Lint and type checks'
